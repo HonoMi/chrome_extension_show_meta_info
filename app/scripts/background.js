@@ -31,16 +31,3 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 }
-
-
-// {
-// 
-// 
-// chrome.runtime.onInstalled.addListener((details) => {
-//   console.log('previousVersion', details.previousVersion)
-// })
-// 
-// console.log(`'Allo 'Allo! Event Page`)
-// 
-// 
-// }

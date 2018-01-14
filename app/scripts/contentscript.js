@@ -11,27 +11,23 @@ const jquery = require('jquery');
 window.$ = window.jQuery = jquery;
 const util = require('./util');
 
-setTimeout(
-
-function(){
-
 $(document).ready(function(){
     const url = location.href;
     chrome.runtime.sendMessage({method: "getQueryWords", url: url}, function(response){
             const googleQueryWords = util.getQueryWordsFromDOM() !== "" ? util.getQueryWordsFromDOM() : response
-            if(googleQueryWords !== ""){
-                const urls = $("a[href]").map(function(){
-                    const path = $(this).attr("href");
-                    if(path.match("^\/.*")){
-                        return location.protocol + "//" + location.hostname + path
-                    }else{
-                        return path
-                    }
-                })
-                chrome.runtime.sendMessage({method: "storeQueryWords", urls: urls, googleQueryWords: googleQueryWords}, function(response) {});
+            if(googleQueryWords === ""){
+                return
             }
+            const urls = $("a[href]").map(function(){
+                const path = $(this).attr("href");
+                if(path.match("^\/.*")){
+                    return location.protocol + "//" + location.hostname + path
+                }else{
+                    return path
+                }
+            })
+            chrome.runtime.sendMessage({method: "storeQueryWords", urls: urls, googleQueryWords: googleQueryWords}, ()=>{});
         });
-
 })
 
 
@@ -56,12 +52,9 @@ chrome.runtime.sendMessage({method: "getQueryWords", url: url}, function(respons
         $("#show_google_query_words_meta").attr("id", "hide");
         setTimeout(function() { $("#hide").attr("id", "show_google_query_words_meta") }, 5000);
         });
-
 })
 // Css
 chrome.runtime.sendMessage({method: "callForCSS"})
 
 
-}
-, 3000);
 }
